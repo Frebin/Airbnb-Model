@@ -9,13 +9,24 @@ class Home extends Component {
           width: this.props.width / 2 - 30,
           height: this.props.width / 2 - 30,
           borderWidth: 0.5,
-          borderColor: "#dddddd"
+          borderColor: "#dddddd",
+          borderRadius: 5,
+          marginTop: 5,
+          marginBottom: 5
         }}
       >
         <View style={{ flex: 1 }}>
           <Image
-            style={{ flex: 1, width: null, height: null, resizeMode: "cover" }}
-            source={require("../../assets/home.jpg")}
+            style={{
+              flex: 1,
+              width: null,
+              height: null,
+              resizeMode: "cover",
+              borderTopLeftRadius: 5,
+              borderTopRightRadius: 5
+            }}
+            //source={require("../../assets/home.jpg")}
+            source={this.props.imageUrl}
           />
         </View>
         <View
@@ -32,7 +43,7 @@ class Home extends Component {
           <Text style={{ fontSize: 12, fontWeight: "bold" }}>
             {this.props.name}
           </Text>
-          <Text style={{ fontSize: 10 }}>{this.props.price}$</Text>
+          <Text style={{ fontSize: 10 }}>₹{this.props.price} / night</Text>
           <StarRating
             disable={true}
             maxStars={5}

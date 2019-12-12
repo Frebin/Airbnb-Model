@@ -9,29 +9,53 @@ import {
   StatusBar,
   ScrollView,
   Image,
-  Dimensions
+  Dimensions,
+  Animated
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import Category from "../components/Explore/Category";
 import Home from "../components/Explore/Home";
+import Tag from "../components/Explore/Tag";
 
 const { height, width } = Dimensions.get("window");
 
 class Explore extends Component {
   componentWillMount() {
+    this.scrollY = new Animated.Value(0);
+
     this.startHeaderHeight = 80;
+    this.endHeaderHeight = 40;
     if (Platform.OS == "android") {
       this.startHeaderHeight = 100 + StatusBar.currentHeight;
+      this.endHeaderHeight = 60 + StatusBar.currentHeight;
     }
+
+    this.animatedHeaderHeight = this.scrollY.interpolate({
+      inputRange: [0, 50],
+      outputRange: [this.startHeaderHeight, this.endHeaderHeight],
+      extrapolate: "clamp"
+    });
+
+    this.animatedOpacity = this.animatedHeaderHeight.interpolate({
+      inputRange: [this.endHeaderHeight, this.startHeaderHeight],
+      outputRange: [0, 1],
+      extrapolate: "clamp"
+    });
+
+    this.animatedTagTop = this.animatedHeaderHeight.interpolate({
+      inputRange: [this.endHeaderHeight, this.startHeaderHeight],
+      outputRange: [-30, 10],
+      extrapolate: "clamp"
+    });
   }
 
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
-          <View
+          <Animated.View
             style={{
-              height: this.startHeaderHeight,
+              height: this.animatedHeaderHeight,
               backgroundColor: "white",
               borderBottomWidth: 1,
               borderBottomColor: "#dddddd"
@@ -58,8 +82,26 @@ class Explore extends Component {
                 style={{ flex: 1, fontWeight: "700", backgroundColor: "white" }}
               />
             </View>
-          </View>
-          <ScrollView scrollEventThrottle={16}>
+            <Animated.View
+              style={{
+                flexDirection: "row",
+                marginHorizontal: 20,
+                position: "relative",
+                top: this.animatedTagTop,
+                opacity: this.animatedOpacity
+              }}
+            >
+              <Tag name="Guests" />
+              <Tag name="Dates" />
+              <Tag name="Events" />
+            </Animated.View>
+          </Animated.View>
+          <ScrollView
+            scrollEventThrottle={16}
+            onScroll={Animated.event([
+              { nativeEvent: { contentOffset: { y: this.scrollY } } }
+            ])}
+          >
             <View style={{ flex: 1, backgroundColor: "white", paddingTop: 20 }}>
               <Text
                 style={{
@@ -68,7 +110,7 @@ class Explore extends Component {
                   paddingHorizontal: 20
                 }}
               >
-                What can we help you find, Varun?
+                What can we help you find, Frebin?
               </Text>
 
               <View style={{ height: 130, marginTop: 20 }}>
@@ -77,8 +119,8 @@ class Explore extends Component {
                   showsHorizontalScrollIndicator={false}
                 >
                   <Category
-                    imageUrl={require("../assets/home.jpg")}
-                    name="Home"
+                    imageUrl={require("../assets/stay.jpg")}
+                    name="Stays"
                   />
                   <Category
                     imageUrl={require("../assets/experience.jpg")}
@@ -88,14 +130,18 @@ class Explore extends Component {
                     imageUrl={require("../assets/restaurant.jpg")}
                     name="Resturant"
                   />
+                  <Category
+                    imageUrl={require("../assets/stadium.jpg")}
+                    name="Satdium"
+                  />
                 </ScrollView>
               </View>
               <View style={{ marginTop: 40, paddingHorizontal: 20 }}>
                 <Text style={{ fontSize: 24, fontWeight: "700" }}>
-                  Introducing Airbnb Plus
+                  Introducing Cooking on Airbnb Plus
                 </Text>
                 <Text style={{ fontWeight: "100", marginTop: 10 }}>
-                  A new selection of homes verified for quality & comfort
+                  The secret ingredient to local culture.
                 </Text>
                 <View style={{ width: width - 40, height: 200, marginTop: 20 }}>
                   <Image
@@ -108,7 +154,7 @@ class Explore extends Component {
                       borderWidth: 1,
                       borderColor: "#dddddd"
                     }}
-                    source={require("../assets/home.jpg")}
+                    source={require("../assets/exp01.jpg")}
                   />
                 </View>
               </View>
@@ -121,7 +167,7 @@ class Explore extends Component {
                   paddingHorizontal: 20
                 }}
               >
-                Homes around the world
+                Places to stay around the world
               </Text>
               <View
                 style={{
@@ -136,22 +182,33 @@ class Explore extends Component {
                   width={width}
                   name="The Cozy Place"
                   type="PRIVATE ROOM - 2 BEDS"
-                  price={82}
-                  rating={4}
+                  price={8220}
+                  rating={3.5}
+                  imageUrl={require("../assets/home.jpg")}
                 />
                 <Home
                   width={width}
-                  name="The Cozy Place"
-                  type="PRIVATE ROOM - 2 BEDS"
-                  price={82}
-                  rating={4}
+                  name="Koto-ku"
+                  type="Decoboco hanare"
+                  price={6520}
+                  rating={4.93}
+                  imageUrl={require("../assets/stay02.jpg")}
                 />
                 <Home
                   width={width}
-                  name="The Cozy Place"
-                  type="PRIVATE ROOM - 2 BEDS"
-                  price={82}
+                  name="Bellecombe-en-Bauges"
+                  type="A quiet yurt in Savoie - Bauges"
+                  price={5887}
+                  rating={4.6}
+                  imageUrl={require("../assets/home3.jpg")}
+                />
+                <Home
+                  width={width}
+                  name="Tyringham"
+                  type="'Silo Studio' Cottage"
+                  price={14806}
                   rating={4}
+                  imageUrl={require("../assets/home4.jpg")}
                 />
               </View>
             </View>

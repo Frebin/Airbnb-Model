@@ -8,10 +8,11 @@ class Category extends Component {
         style={{
           height: 130,
           width: 130,
-          marginLeft: 20,
+          marginLeft: 15,
           borderWidth: 0.5,
           borderColor: "#dddddd",
-          borderRadius: 5
+          borderRadius: 5,
+          marginRight: 10
         }}
       >
         <View style={{ flex: 2 }}>
